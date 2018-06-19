@@ -1,0 +1,22 @@
+---
+- hosts: routers
+  tasks:
+  - name: Configuracion SNMP
+    ios_config:
+      lines: "snmp-server community asir ro"
+      provider: "{{ credenciales }}"
+
+  - name: Lista de acceso SNMP
+    ios_config:
+      lines:
+      - "permit ip host 10.104.2.60 any"
+      parents: ip access-list extended snmp-access
+      before: no ip access-list extended snmp-access
+      match: exact
+      provider: "{{ credenciales }}"
+
+  - name: Guarda configuración
+    ios_config:
+      lines: file prompt quiet
+      save_when: modified
+      provider: "{{ credenciales }}"

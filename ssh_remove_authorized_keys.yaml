@@ -1,0 +1,18 @@
+#Este playbook crea el directorio y fichero donde iran las claves ssh autorizadas
+#Este playbook elimina el contenido authorized_keys de los hosts que indiquemos.
+---
+- hosts: prueba
+  tasks:
+  - name: Elimina el fichero authorized_keys
+    file:
+      path: "/home/{{ ansible_user }}/.ssh/authorized_keys"
+      state: absent
+  - name: Crea de nuevo el fichero authorized_keys, pero vacio
+    file:
+      path: "/home/{{ ansible_user }}/.ssh/authorized_keys"
+      state: touch
+  - name: Reinicia el servicio SSH
+    become: yes
+    service:
+      name: ssh
+      state: restarted

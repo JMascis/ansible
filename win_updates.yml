@@ -1,0 +1,14 @@
+---
+- hosts: windows
+  tasks:
+  - name: Instala actualizaciones de Windows.
+    win_updates:
+      category_names:
+        - CriticalUpdates
+        - SecurityUpdates
+        - UpdateRollups
+      reboot: yes
+      async: 180
+      poll: 10
+      register: updates_to_install
+      become: yes

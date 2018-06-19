@@ -1,0 +1,14 @@
+---
+- hosts: localhost
+  tasks:
+  - name: Realiza un apt-get update en el sistema.
+    apt:
+      autoclean: yes
+      update_cache: yes
+  - name: Instala las actualizaciones de seguridad
+    shell: sudo unattended-upgrades
+    notify:
+    - reinicia el sistema
+  handlers:
+    - name: reinicia el sistema
+      shell: sudo reboot

@@ -1,0 +1,75 @@
+---
+- hosts: Linux
+  tasks:
+  - name: instala python2.7
+    apt:
+      name: python2.7
+      state: present
+      update_cache: yes
+
+  - name: create python symlink
+    file:
+      src: /usr/bin/python2.7
+      dest: /usr/bin/python
+      owner: root
+      group: root
+      state: link
+  - name: Install packages
+    apt: name={{item}}
+    with_items:
+      - python3-pip
+      - python3-mysqldb
+##################################################################
+- hosts: Linux
+  roles:
+  - mysql
+  - apache
+  - php
+##################################################################
+- hosts: Linux
+  tasks:
+  - name: Crea base de datos con nombre wordpress.
+    mysql_db:
+      name: wordpress
+      state: present
+  - name: Crea usuario con nombre wordpress y contraseña wordpress
+    mysql_user:
+      name: wordpress
+      password: wordpress
+      priv: '*.*:ALL'
+      state: present
+##################################################################
+- hosts: Linux
+  roles:
+  - wordpress
+  vars:
+    wordpress_installs:
+      - name: wordpress
+        dbname: wordpress
+        dbuser: wordpress
+        dbpass: 'wordpress'
+        dbhost: localhost
+        path: /var/www
+        url: http://{{ ansible_host }}
+        title: wordpress
+        admin_name: admin
+        admin_email: root@localhost.localdomain
+        admin_password: 'tuFr8=aPra@a'
+        themes:
+          - name: twentytwelve
+            activate: true
+          - name: twentythirteen
+        plugins:
+          - name: contact-form-7
+            activate: false
+          - name: simple-fields
+        users: {}
+        options: []
+        queries: []
+##################################################################
+- hosts: Linux
+  tasks:
+  - name: Reinicio apache
+    service:
+      name: apache2
+      state: restarted

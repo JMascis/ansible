@@ -1,0 +1,12 @@
+##ansible-playbook 
+---
+- hosts: windows
+  vars:
+    domainname: "asir.ansible.local"
+    domainnetbios: "asir"
+    domainadmin_user: "administrador"
+    domainadmin_pass: "server.2018ws"
+    safemodeadmin_user: "safeadministrador"
+    safemodeadmin_pass: "server.2018ws"
+  roles:
+    - pyrotimux.WinDomainInit

@@ -1,0 +1,6 @@
+- hosts: monitor
+  become: yes
+  roles:
+     - { role: dj-wasabi.zabbix-server }
+     - { role: geerlingguy.apache }
+     - { role: dj-wasabi.zabbix-web }
